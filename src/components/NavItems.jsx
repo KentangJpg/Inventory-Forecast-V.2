@@ -1,18 +1,26 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export const NavItems = ({ title, icon, showTitle = true, active = false }) => {
+  return (
+    <div className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+      active 
+        ? "bg-orange-100 text-orange-600" 
+        : "hover:bg-gray-100 text-gray-600"
+    }`}>
+      <span className={active ? "text-orange-500" : "text-gray-500"}>
+        {icon}
+      </span>
+        {showTitle && (
+          <span className="ml-3  whitespace-nowrap overflow-hidden text-ellipsis block w-48">
+            {title}
+          </span>
+        )}    </div>
+  );
+};
 
 export const Title = ({ title }) => {
   return (
-    <div>
-      <span className="title">{title}</span>
-    </div>
-  );
-};
-export const NavItems = ({ title, icon }) => {
-  return (
-    <div className="flex items-center gap-2 text-stone-950 hover:text-gray-900 cursor-pointer py-2 px-4 rounded-lg hover:bg-stone-100">
-      <FontAwesomeIcon icon={icon} />
-      <span className="text-sm">{title}</span>
+    <div className="text-xs uppercase font-bold text-gray-400 tracking-widest mt-4 mb-2">
+      {title}
     </div>
   );
 };

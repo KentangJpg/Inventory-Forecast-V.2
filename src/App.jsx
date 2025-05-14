@@ -1,19 +1,19 @@
-import { useState } from "react";
-import Dashboard from "./components/Dashboard";
-import Sidebar from "./components/Sidebar";
-import Inventory from "./components/Inventory";
 import { Routes, Route } from "react-router-dom";
+import RootLayout from "./layouts/RootLayout";
+import Dashboard from "./pages/Dashboard";
+import Inventory from "./pages/Inventory"
 import "./index.css";
+import PurchaseOrder from "./pages/PurchaseOrder";
 
 function App() {
   return (
-    <main className="bg-orange-50 grid grid-cols-[220px_1fr] gap-4 p-4">
-      <Sidebar />
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/inventory" element={<Inventory />} />
-      </Routes>
-    </main>
+    <Routes>
+      <Route path="/" element={<RootLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="inventory" element={<Inventory />} />
+        <Route path="purchase" element={<PurchaseOrder />} />
+      </Route>
+    </Routes>
   );
 }
 
