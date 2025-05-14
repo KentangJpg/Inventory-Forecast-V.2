@@ -45,7 +45,7 @@ const RootLayout = () => {
   };
 
   return (
-    <div className="bg-orange-50">
+    <div className="bg-white">
       <div
         className={`grid ${getLayoutClass()} gap-4 p-2 transition-all duration-300`}
       >
