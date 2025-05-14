@@ -77,7 +77,7 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
 
         <Separator
           orientation="horizontal"
-          className={`${collapsed ? "mt-3.5" : "mt-2.5"}`}
+          className={`${collapsed ? "mt-4" : "mt-2.5"}`}
         />
         <div className="space-y-1">
           {!collapsed && <Title title="General" />}
