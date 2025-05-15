@@ -1,5 +1,5 @@
 import { FiSidebar } from "react-icons/fi";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Separator } from "./ui/separator";
 import {
   Breadcrumb,
@@ -13,14 +13,34 @@ import { useLocation } from "react-router-dom";
 
 const Navbar = ({ title, toggleSidebar, isMobile }) => {
   const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrolled]);
 
   const pathSegments = location.pathname
     .split("/")
     .filter((segment) => segment);
 
   return (
-    <div className="border-b mb-4 py-3 mx-3 border-stone-300">
-      <div className="flex flex-wrap  items-center justify-between">
+    <div
+      className={`sticky top-0 z-20 bg-white mb-4 py-3 pl-2 mx-3 mt-2 border-stone-300 transition-shadow duration-300 ${
+        scrolled ? "shadow-md rounded-md mt-4" : ""
+      }`}
+    >
+      <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2 mb-2 md:mb-0 h-8">
           <button
             onClick={toggleSidebar}

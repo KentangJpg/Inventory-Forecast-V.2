@@ -59,9 +59,9 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
 
   return (
     <div
-      className={`bg-white rounded-lg p-2 h-[97vh] sticky overflow-y-auto shadow-lg transition-all duration-300 ease-in-out border-2 overflow-hidden ${
+      className={`bg-white p-2 h-[98vh] overflow-y-auto shadow-lg transition-all duration-300 ease-in-out border-1 overflow-hidden ${
         collapsed ? "w-16" : "w-64"
-      } ${isMobile ? "rounded-none h-full" : "rounded-lg"} relative`}
+      } ${isMobile ? "rounded-none h-full border-0" : "rounded-lg  m-2"}`}
     >
       <div className={`px-1.5 ${collapsed ? "items-center" : ""}`}>
         {!collapsed && <Account />}

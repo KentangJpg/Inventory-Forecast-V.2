@@ -35,54 +35,40 @@ const RootLayout = () => {
     }
   };
 
-  const getLayoutClass = () => {
+  const getContentMarginClass = () => {
     if (isMobile) {
-      return "grid-cols-1";
+      return "";
     }
-    return isSidebarCollapsed
-      ? "grid-cols-[4rem_1fr]"
-      : "grid-cols-[16rem_1fr]";
+    return isSidebarCollapsed ? "ml-[4rem]" : "ml-[16rem]";
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-screen">
+      {isMobile && (
+        <div
+          className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out z-30 ${
+            isSidebarOpen ? "opacity-50" : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setIsSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <div
-        className={`grid ${getLayoutClass()} gap-4 p-2 transition-all duration-300`}
+        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 ease-in-out ${
+          isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"
+        }`}
       >
-        {isMobile && (
-          <div
-            className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out z-10 ${
-              isSidebarOpen ? "opacity-50" : "opacity-0 pointer-events-none"
-            }`}
-            onClick={() => setIsSidebarOpen(false)}
-            aria-hidden="true"
-          />
-        )}
+        <Sidebar
+          isCollapsed={isSidebarCollapsed}
+          isMobile={isMobile}
+          onCloseMobile={() => setIsSidebarOpen(false)}
+        />
+      </div>
 
-        <div
-          className={`
-          ${
-            isMobile
-              ? "fixed inset-y-0 left-0 z-20 transform transition-transform duration-300 ease-in-out"
-              : ""
-          }
-          ${isMobile && !isSidebarOpen ? "-translate-x-full" : "translate-x-0"}
-        `}
-        >
-          <Sidebar
-            isCollapsed={isSidebarCollapsed}
-            isMobile={isMobile}
-            onCloseMobile={() => setIsSidebarOpen(false)}
-          />
-        </div>
-
-        <div
-          className={`content ${
-            isMobile ? "w-full" : ""
-          } transition-all duration-300`}
-        >
-          <Outlet context={{ toggleSidebar, isMobile }} />
-        </div>
+      {/* Main Content - with appropriate margin */}
+      <div className={`transition-all duration-300 ${getContentMarginClass()}`}>
+        <Outlet context={{ toggleSidebar, isMobile }} />
       </div>
     </div>
   );

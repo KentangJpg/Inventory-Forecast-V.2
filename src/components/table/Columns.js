@@ -1,11 +1,11 @@
 export const columns = [
   {
-    accessorKey: 'category',
-    header: 'Category',
-  },
-  {
     accessorKey: 'productName',
     header: 'Product Name',
+  },
+  {
+    accessorKey: 'category',
+    header: 'Category',
   },
   {
     accessorKey: 'unitPrice',
