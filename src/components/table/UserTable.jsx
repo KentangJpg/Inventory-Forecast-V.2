@@ -38,7 +38,6 @@ import {
   FaSort,
   FaSortUp,
   FaSortDown,
-  FaSearch,
   FaChevronLeft,
   FaChevronRight,
   FaAngleDoubleLeft,
@@ -77,12 +76,11 @@ export default function UserTable() {
     <div>
       <div className="flex items-center justify-between py-4">
         <div className="relative w-full max-w-sm">
-          <FaSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Filter products..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-8 w-full"
+            className=" w-full"
           />
         </div>
 
@@ -177,7 +175,7 @@ export default function UserTable() {
                               className="flex items-center"
                             >
                               <BiHide className="mr-2 h-3.5 w-3.5" />
-                              <span>Hide Column</span>
+                              <span>Hide</span>
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
