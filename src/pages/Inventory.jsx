@@ -1,5 +1,5 @@
 import React from "react";
-import UserTable from "../components/table/UserTable";
+import ProductTable from "../components/table/ProductTable";
 import PageLayout from "@/layouts/PageLayout";
 import { useOutletContext } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const Inventory = () => {
             Manage your products and stocks here
           </p>
         </div>
-        <UserTable className="min-w-full" />
+        <ProductTable className="min-w-full" />
       </div>
     </PageLayout>
   );
