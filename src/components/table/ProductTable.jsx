@@ -47,7 +47,7 @@ import { VscSettings } from "react-icons/vsc";
 import { BiHide } from "react-icons/bi";
 
 
-export default function UserTable() {
+export default function ProductTable() {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
@@ -88,7 +88,7 @@ export default function UserTable() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="ml-auto flex items-center gap-2"
+              className="ml-auto flex items-center gap-2 cursor-pointer"
             >
               <VscSettings className="h-4 w-4" />
               View
@@ -132,7 +132,7 @@ export default function UserTable() {
                     >
                       {header.column.getCanSort() ? (
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger asChild className="cursor-pointer">
                             <Button
                               variant="ghost"
                               className="p-0 h-8 font-medium flex items-center"
@@ -228,7 +228,7 @@ export default function UserTable() {
                 table.setPageSize(Number(value));
               }}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-[70px] cursor-pointer">
                 <SelectValue
                   placeholder={table.getState().pagination.pageSize}
                 />
@@ -252,15 +252,6 @@ export default function UserTable() {
               <Button
                 variant="outline"
                 className="h-8 w-8 p-0 flex items-center justify-center"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <FaAngleDoubleLeft className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 p-0 flex items-center justify-center"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
@@ -275,15 +266,6 @@ export default function UserTable() {
               >
                 <span className="sr-only">Go to next page</span>
                 <FaChevronRight className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 p-0 flex items-center justify-center"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <FaAngleDoubleRight className="h-3 w-3" />
               </Button>
             </div>
           </div>
