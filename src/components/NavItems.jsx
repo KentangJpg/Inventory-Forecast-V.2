@@ -1,7 +1,7 @@
 
 export const NavItems = ({ title, icon, showTitle = true, active = false }) => {
   return (
-    <div className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+    <div className={`flex items-center p-2 my-1 rounded-lg cursor-pointer transition-colors duration-200 ${
       active 
         ? "bg-slate-100 text-black" 
         : "hover:bg-gray-100 "

@@ -1,4 +1,4 @@
-export const columns = [
+export const ProductColumns = [
   {
     accessorKey: 'productName',
     header: 'Product Name',

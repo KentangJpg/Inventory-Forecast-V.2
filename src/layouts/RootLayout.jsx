@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
 
 const RootLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -70,6 +71,7 @@ const RootLayout = () => {
       <div className={`transition-all duration-300 ${getContentMarginClass()}`}>
         <Outlet context={{ toggleSidebar, isMobile }} />
       </div>
+      <Toaster />
     </div>
   );
 };

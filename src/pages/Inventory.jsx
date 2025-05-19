@@ -1,7 +1,9 @@
 import React from "react";
-import ProductTable from "../components/table/ProductTable";
 import PageLayout from "@/layouts/PageLayout";
 import { useOutletContext } from "react-router-dom";
+import DataTable from "../components/table/DataTable";
+import { ProductColumns } from "@/components/table/ProductColumns";
+import { ProductData } from "@/components/table/ProductData";
 
 const Inventory = () => {
   const { toggleSidebar, isMobile } = useOutletContext();
@@ -19,7 +21,11 @@ const Inventory = () => {
             Manage your products and stocks here
           </p>
         </div>
-        <ProductTable className="min-w-full" />
+        <DataTable
+          columns={ProductColumns}
+          data={ProductData}
+          filterPlaceholder="Filter products..."
+        />
       </div>
     </PageLayout>
   );

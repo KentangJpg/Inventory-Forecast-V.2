@@ -7,8 +7,6 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { columns } from "./Columns";
-import { data } from "./data";
 import {
   Table,
   TableBody,
@@ -40,14 +38,15 @@ import {
   FaSortDown,
   FaChevronLeft,
   FaChevronRight,
-  FaAngleDoubleLeft,
-  FaAngleDoubleRight,
 } from "react-icons/fa";
 import { VscSettings } from "react-icons/vsc";
 import { BiHide } from "react-icons/bi";
 
-
-export default function ProductTable() {
+export default function DataTable({
+  data,
+  columns,
+  filterPlaceholder = "Filter...",
+}) {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [globalFilter, setGlobalFilter] = useState("");
@@ -77,10 +76,10 @@ export default function ProductTable() {
       <div className="flex items-center justify-between py-4">
         <div className="relative w-full max-w-sm">
           <Input
-            placeholder="Filter products..."
+            placeholder={filterPlaceholder}
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className=" w-full"
+            className="w-full"
           />
         </div>
 
@@ -132,7 +131,10 @@ export default function ProductTable() {
                     >
                       {header.column.getCanSort() ? (
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild className="cursor-pointer">
+                          <DropdownMenuTrigger
+                            asChild
+                            className="cursor-pointer"
+                          >
                             <Button
                               variant="ghost"
                               className="p-0 h-8 font-medium flex items-center"

@@ -1,4 +1,4 @@
-export const data = [
+export const ProductData = [
   {
     productName: "Clapping Monkey",
     category: "Toys",

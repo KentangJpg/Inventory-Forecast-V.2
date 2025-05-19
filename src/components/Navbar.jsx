@@ -11,7 +11,7 @@ import {
 } from "./ui/breadcrumb";
 import { useLocation } from "react-router-dom";
 
-const Navbar = ({ title, toggleSidebar, isMobile }) => {
+const Navbar = ({ toggleSidebar, isMobile }) => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
 
