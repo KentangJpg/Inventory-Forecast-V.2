@@ -3,6 +3,7 @@ import { Title, NavItems } from "./NavItems";
 import { Link, useLocation } from "react-router-dom";
 import { GrCubes } from "react-icons/gr";
 import { LuLayoutDashboard, LuShoppingCart } from "react-icons/lu";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import {
   Tooltip,
   TooltipContent,
@@ -102,6 +103,12 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
             "Purchase Order",
             <LuShoppingCart size={iconSize} />,
             isActive("/purchase")
+          )}
+          {renderNavItem(
+            "/sales",
+            "Purchase Order",
+            <RiMoneyDollarCircleLine size={iconSize} />,
+            isActive("/sales")
           )}
 
           {!collapsed && <Title title="Others" />}
