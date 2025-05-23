@@ -1,16 +1,21 @@
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 
 export const SalesColumns = [
   {
-    accessorKey: "id",
+    accessorKey: "sales_record_id",
     header: "Sales ID",
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <div className="max-w-[180px] truncate">
+        {row.getValue("sales_record_id")}
+      </div>
+    ),
   },
   {
-    accessorKey: "date",
+    accessorKey: "transaction_date",
     header: "Date",
     cell: ({ row }) => {
-      const date = row.getValue("date");
+      const date = row.getValue("transaction_date");
       if (!date) return null;
       return <div>{format(new Date(date), "PPP")}</div>;
     },
@@ -21,21 +26,39 @@ export const SalesColumns = [
     cell: ({ row }) => <div>{row.getValue("productName")}</div>,
   },
   {
-    accessorKey: "quantity",
+    accessorKey: "quantity_sold",
     header: "Quantity",
-    cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
+    cell: ({ row }) => <div>{row.getValue("quantity_sold")}</div>,
   },
   {
-    accessorKey: "price",
+    accessorKey: "unit_price_at_sale",
     header: "Unit Price",
-    cell: ({ row }) => <div>${row.getValue("price").toFixed(2)}</div>,
+    cell: ({ row }) => (
+      <div>${row.getValue("unit_price_at_sale").toFixed(2)}</div>
+    ),
   },
   {
-    accessorKey: "discount",
+    accessorKey: "discount_applied",
     header: "Discount",
     cell: ({ row }) => {
-      const discount = row.getValue("discount");
+      const discount = row.getValue("discount_applied");
       return <div>{discount}%</div>;
+    },
+  },
+  {
+    accessorKey: "promotion_marker",
+    header: "Promotion",
+    cell: ({ row }) => {
+      const hasPromotion = row.getValue("promotion_marker");
+      return hasPromotion ? (
+        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+          Yes
+        </Badge>
+      ) : (
+        <Badge variant="outline" className="text-gray-500">
+          No
+        </Badge>
+      );
     },
   },
   {

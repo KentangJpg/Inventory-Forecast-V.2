@@ -106,14 +106,13 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
           )}
           {renderNavItem(
             "/sales",
-            "Purchase Order",
+            "Sales",
             <RiMoneyDollarCircleLine size={iconSize} />,
             isActive("/sales")
           )}
 
           {!collapsed && <Title title="Others" />}
-
-          {/* Uncomment and update these when needed
+{/* 
           {renderNavItem(
             "/settings",
             "Settings",
@@ -126,8 +125,8 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
             "Help Center",
             faQuestionCircle,
             isActive("/help")
-          )}
-          */}
+          )} */}
+         
         </div>
       </div>
     </div>

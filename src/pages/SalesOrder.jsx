@@ -1,15 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageLayout from "../layouts/PageLayout";
 import { useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FiPlus, FiCheck, FiChevronDown } from "react-icons/fi";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
 import {
   Sheet,
   SheetTrigger,
@@ -41,16 +34,19 @@ import {
 } from "@/components/ui/form";
 import DataTable from "@/components/table/DataTable";
 import { SalesColumns } from "@/components/table/SalesColumns";
-import { SalesData } from "@/components/table/SalesData";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  id: z.string().min(1, { message: "Sales ID is required" }),
-  date: z.date({ required_error: "Date is required" }),
+  transaction_date: z.date({ required_error: "Date is required" }),
   productName: z.string().min(1, { message: "Product name is required" }),
-  quantity: z.number().int().positive({ message: "Quantity must be positive" }),
-  price: z.number().positive({ message: "Price must be positive" }),
-  discount: z
+  quantity_sold: z
+    .number()
+    .int()
+    .positive({ message: "Quantity must be positive" }),
+  unit_price_at_sale: z
+    .number()
+    .positive({ message: "Price must be positive" }),
+  discount_applied: z
     .number()
     .min(0, { message: "Discount cannot be negative" })
     .max(100, { message: "Discount cannot exceed 100%" }),
@@ -59,8 +55,10 @@ const formSchema = z.object({
 const SalesOrder = () => {
   const { toggleSidebar, isMobile } = useOutletContext();
   const [open, setOpen] = useState(false);
+  const [salesData, setSalesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Product list
   const productList = [
     { id: "P0001", name: "Gourmet Coffee Trio" },
     { id: "P0002", name: "Metal Floor Lamp" },
@@ -87,14 +85,39 @@ const SalesOrder = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: "",
-      date: undefined,
+      transaction_date: undefined,
       productName: "",
-      quantity: 1,
-      price: 0,
-      discount: 0,
+      quantity_sold: 1,
+      unit_price_at_sale: 0,
+      discount_applied: 0,
     },
   });
+
+  // Fetch sales data
+  const fetchSalesData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/sales-records/");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setSalesData(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching sales data:", err);
+      setError("Failed to load sales data. Please try again later.");
+      toast.error("Failed to load sales data", {
+        description: "Check your connection and try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSalesData();
+  }, []);
 
   // When product is selected, update the price
   const onProductChange = (productName) => {
@@ -108,35 +131,65 @@ const SalesOrder = () => {
 
   // Calculate total amount with discount
   const calculateTotal = () => {
-    const quantity = form.watch("quantity") || 0;
-    const price = form.watch("price") || 0;
-    const discount = form.watch("discount") || 0;
+    const quantity = form.watch("quantity_sold") || 0;
+    const price = form.watch("unit_price_at_sale") || 0;
+    const discount = form.watch("discount_applied") || 0;
 
     const subtotal = quantity * price;
     const discountAmount = subtotal * (discount / 100);
     return (subtotal - discountAmount).toFixed(2);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     try {
-      // Get product ID based on product name for backend
+      // Get product ID based on product name
       const selectedProduct = productList.find(
         (product) => product.name === data.productName
       );
-      const productId = selectedProduct ? selectedProduct.id : null;
 
-      // Create a data object with product ID for backend
-      const backendData = {
-        ...data,
-        productId,
-        total: parseFloat(calculateTotal()),
+      if (!selectedProduct) {
+        toast.error("Invalid product selected");
+        return;
+      }
+
+      // Format date to ISO string
+      const formattedDate = data.transaction_date.toISOString();
+
+      // Create request payload
+      const requestPayload = {
+        product_id: selectedProduct.id,
+        transaction_date: formattedDate,
+        quantity_sold: data.quantity_sold,
+        unit_price_at_sale: data.unit_price_at_sale,
+        discount_applied: data.discount_applied,
+        promotion_marker: data.discount_applied > 0, // true if discount exists
       };
+
+      // Send POST request using fetch instead of axios
+      const response = await fetch("/api/sales-records/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! Status: ${response.status}`
+        );
+      }
 
       // Show success toast
       toast.success("Sales order created successfully", {
-        description: `Sales ${data.id} for ${data.productName} has been created.`,
+        description: `Sales order for ${data.productName} has been created.`,
       });
 
+      // Refresh sales data
+      fetchSalesData();
+
+      // Reset the form and close the sheet
       setOpen(false);
       form.reset();
     } catch (error) {
@@ -147,6 +200,36 @@ const SalesOrder = () => {
       console.error("Error creating sales order:", error);
     }
   };
+
+  // Helper function to calculate total for each sale
+  const calculateSaleTotal = (quantity, price, discount) => {
+    const subtotal = quantity * price;
+    const discountAmount = subtotal * (discount / 100);
+    return subtotal - discountAmount;
+  };
+  // Format data for the DataTable
+  const formattedSalesData = salesData.map((sale) => {
+    // Find product name from product_id
+    const product = productList.find((p) => p.id === sale.product_id);
+
+    return {
+      sales_record_id: sale.sales_record_id,
+      transaction_date: sale.transaction_date,
+      product_id: sale.product_id,
+      productName: product ? product.name : "Unknown Product",
+      quantity_sold: sale.quantity_sold,
+      unit_price_at_sale: sale.unit_price_at_sale,
+      discount_applied: sale.discount_applied,
+      total: calculateSaleTotal(
+        sale.quantity_sold,
+        sale.unit_price_at_sale,
+        sale.discount_applied
+      ),
+      promotion_marker: sale.promotion_marker,
+      created_at: sale.created_at,
+      updated_at: sale.updated_at,
+    };
+  });
 
   return (
     <PageLayout
@@ -186,21 +269,7 @@ const SalesOrder = () => {
                   >
                     <FormField
                       control={form.control}
-                      name="id"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Sales ID</FormLabel>
-                          <FormControl>
-                            <Input placeholder="SO-001" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="date"
+                      name="transaction_date"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel>Date</FormLabel>
@@ -365,7 +434,7 @@ const SalesOrder = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="quantity"
+                        name="quantity_sold"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Quantity</FormLabel>
@@ -387,7 +456,7 @@ const SalesOrder = () => {
 
                       <FormField
                         control={form.control}
-                        name="price"
+                        name="unit_price_at_sale"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Unit Price</FormLabel>
@@ -411,7 +480,7 @@ const SalesOrder = () => {
 
                     <FormField
                       control={form.control}
-                      name="discount"
+                      name="discount_applied"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Discount (%)</FormLabel>
@@ -449,11 +518,24 @@ const SalesOrder = () => {
             </SheetContent>
           </Sheet>
         </div>
-        <DataTable
-          columns={SalesColumns}
-          data={SalesData}
-          filterPlaceholder="Filter sales orders..."
-        />
+
+        {error && (
+          <div className="bg-red-50 text-red-700 p-4 rounded-md mb-4">
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        ) : (
+          <DataTable
+            columns={SalesColumns}
+            data={formattedSalesData}
+            filterPlaceholder="Filter sales orders..."
+          />
+        )}
       </div>
     </PageLayout>
   );
