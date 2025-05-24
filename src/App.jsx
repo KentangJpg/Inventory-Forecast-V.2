@@ -5,6 +5,7 @@ import Inventory from "./pages/Inventory";
 import "./index.css";
 import PurchaseOrder from "./pages/PurchaseOrder";
 import SalesOrder from "./pages/SalesOrder";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="inventory" element={<Inventory />} />
         <Route path="purchase" element={<PurchaseOrder />} />
         <Route path="sales" element={<SalesOrder />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     </Routes>
   );
