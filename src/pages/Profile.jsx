@@ -103,23 +103,21 @@ const Profile = () => {
       firstName: "",
       lastName: "",
       bio: "",
-      emails: [""], 
+      email: "", 
       password: "",
       newPassword: "",
     },
   });
 
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "emails", 
-  });
 
-  console.log("Current email fields (from useFieldArray):", fields);
+
+
 
   const onSubmit = (values) => {
     console.log("Form values:", values);
   };
+
   const handleDeleteAccount = () => {
   console.log("Account deletion confirmed!");
   setShowDeleteAccountDialog(false); 
@@ -247,49 +245,22 @@ const Profile = () => {
                 )}
               />
 
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <FormLabel className="text-base">Emails</FormLabel>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => append("")} 
-                    className="flex items-center gap-1"
-                  >
-                    <FiPlus className="mr-2 h-4 w-4" /> Add email
-                  </Button>
-                </div>
-
-                {fields.map((item, index) => (
-                  <FormItem key={item.id} className="mb-2">
-                    <div className="flex items-center space-x-2">
-                      <FormControl className="flex-1 max-w-sm">
-                        <Input placeholder="example@gmail.com" {...form.register(`emails.${index}`)} />
-                      </FormControl>
-                      {fields.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => remove(index)}
-                        >
-                          <FiTrash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                    <FormMessage>
-                      {form.formState.errors.emails?.[index]?.message}
-                    </FormMessage>
+              <FormField 
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="example@gmail.com" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is the email address associated with your account.
+                    </FormDescription>
+                    <FormMessage />
                   </FormItem>
-                ))}
-            
-                {form.formState.errors.emails?.message && (
-                  <p className="text-sm font-medium text-destructive mt-2">
-                    {form.formState.errors.emails.message}
-                  </p>
                 )}
-              </div>
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
