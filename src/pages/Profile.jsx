@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form"; 
+import { useForm } from "react-hook-form"; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import PageLayout from "../layouts/PageLayout"; 
@@ -36,7 +36,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FiPlus, FiTrash2 } from "react-icons/fi"; 
+
 
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB

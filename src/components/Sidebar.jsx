@@ -6,6 +6,7 @@ import { LuLayoutDashboard, LuShoppingCart } from "react-icons/lu";
 import { RiMoneyDollarCircleLine } from "react-icons/ri"; 
 import { GoGear, GoChevronRight } from "react-icons/go";
 import { PiUserFocus } from "react-icons/pi";
+import { MdOutlineColorLens } from "react-icons/md";
 import {
   Tooltip,
   TooltipContent,
@@ -180,10 +181,10 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
                 isActive("/profile")
               )}
               {renderNavItem(
-                "/help",
-                "Help Center",
-                <GoGear size={iconSize} />,
-                isActive("/help")
+                "/appearance",
+                "Appearance",
+                <MdOutlineColorLens size={iconSize} />,
+                isActive("/appearance")
               )}
             </>
           )}
