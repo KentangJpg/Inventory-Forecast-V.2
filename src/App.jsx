@@ -6,6 +6,10 @@ import "./index.css";
 import PurchaseOrder from "./pages/PurchaseOrder";
 import SalesOrder from "./pages/SalesOrder";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -16,7 +20,11 @@ function App() {
         <Route path="purchase" element={<PurchaseOrder />} />
         <Route path="sales" element={<SalesOrder />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="account" element={<Account />} />
       </Route>
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }

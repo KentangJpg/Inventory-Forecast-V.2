@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form"; 
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import PageLayout from "../layouts/PageLayout"; 
-import { useOutletContext } from "react-router-dom"; 
+import PageLayout from "../layouts/PageLayout";
+import { useOutletContext } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -14,14 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -31,66 +23,80 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-
-
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
-
-const profileSchema = z.object({
-  profilePicture: z
-    .instanceof(File)
-    .nullable()
-    .optional()
-    .refine(
-      (file) => {
+const profileSchema = z
+  .object({
+    profilePicture: z
+      .instanceof(File)
+      .nullable()
+      .optional()
+      .refine((file) => {
         if (!file) return true;
         return file.size <= MAX_FILE_SIZE;
-      },
-      `Profile picture must be less than ${MAX_FILE_SIZE / (1024 * 1024)}MB`
-    )
-    .refine(
-      (file) => {
+      }, `Profile picture must be less than ${MAX_FILE_SIZE / (1024 * 1024)}MB`)
+      .refine((file) => {
         if (!file) return true;
         return SUPPORTED_FORMATS.includes(file.type);
-      },
-      "Unsupported file format. Please upload a PNG, JPG or JPEG image."
-    ),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  bio: z.string().max(500, "Bio must be less than 500 characters").optional().or(z.literal("")),
-  emails: z.array(z.string().email("Invalid email format").min(1, "Email cannot be empty")).min(1, "At least one email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters").or(z.literal("")).optional(),
-  newPassword: z.string().min(8, "New password must be at least 8 characters").or(z.literal("")).optional(),
-}).refine(
-  (data) => {
-    if (data.newPassword && !data.password) {
-      return false;
+      }, "Unsupported file format. Please upload a PNG, JPG or JPEG image."),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    bio: z
+      .string()
+      .max(500, "Bio must be less than 500 characters")
+      .optional()
+      .or(z.literal("")),
+    emails: z
+      .array(
+        z.string().email("Invalid email format").min(1, "Email cannot be empty")
+      )
+      .min(1, "At least one email is required"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .or(z.literal(""))
+      .optional(),
+    newPassword: z
+      .string()
+      .min(8, "New password must be at least 8 characters")
+      .or(z.literal(""))
+      .optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.newPassword && !data.password) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Current password is required to set a new password",
+      path: ["password"],
     }
-    return true;
-  },
-  {
-    message: "Current password is required to set a new password",
-    path: ["password"],
-  }
-).refine(
-  (data) => {
-    if (data.newPassword && data.password && data.newPassword === data.password) {
-      return false;
+  )
+  .refine(
+    (data) => {
+      if (
+        data.newPassword &&
+        data.password &&
+        data.newPassword === data.password
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "New password must be different from current password",
+      path: ["newPassword"],
     }
-    return true;
-  },
-  {
-    message: "New password must be different from current password",
-    path: ["newPassword"],
-  }
-);
+  );
 
 const Profile = () => {
   const { toggleSidebar, isMobile } = useOutletContext();
@@ -103,45 +109,45 @@ const Profile = () => {
       firstName: "",
       lastName: "",
       bio: "",
-      email: "", 
+      email: "",
       password: "",
       newPassword: "",
     },
   });
-
-
-
-
-
 
   const onSubmit = (values) => {
     console.log("Form values:", values);
   };
 
   const handleDeleteAccount = () => {
-  console.log("Account deletion confirmed!");
-  setShowDeleteAccountDialog(false); 
-};
+    console.log("Account deletion confirmed!");
+    setShowDeleteAccountDialog(false);
+  };
 
   const [preview, setPreview] = useState(null);
 
   return (
-    <PageLayout title="Profile" toggleSidebar={toggleSidebar} isMobile={isMobile}>
+    <PageLayout
+      title="Profile"
+      toggleSidebar={toggleSidebar}
+      isMobile={isMobile}
+    >
       <div className="mt-4">
         <div className="mb-4">
           <h2 className="text-2xl font-bold tracking-tight mb-2">Settings</h2>
           <p className="text-gray-600">Manage your Account settings here.</p>
         </div>
       </div>
-      <Card className={"max-w-250 mx-auto"}>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Profile Settings</CardTitle>
-          <CardDescription className="text-gray-600">
+      <Separator className="my-6" />
+      <div className={"w-full mx-auto"}>
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold mx-6">Profile Settings</span>
+          <span className="text-gray-600 mx-6">
             This is how others will see you
-          </CardDescription>
-        </CardHeader>
-        <Separator orientation="horizontal" />
-        <CardContent className="space-y-4">
+          </span>
+        </div>
+        <Separator orientation="horizontal" className="my-6" />
+        <div className="space-y-4 mx-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -152,19 +158,29 @@ const Profile = () => {
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <img
-                          src={preview || "https://api.dicebear.com/9.x/notionists/svg"}
+                          src={
+                            preview ||
+                            "https://api.dicebear.com/9.x/notionists/svg"
+                          }
                           alt="Profile Preview"
                           className="h-24 w-24 rounded-full object-cover bg-violet-500"
                         />
                       </div>
                       <div className="flex-1 flex flex-col">
-                        <FormLabel className="text-lg font-semibold">Profile picture</FormLabel>
-                        <p className="text-sm text-gray-500">PNG, JPEG under 15MB</p>
+                        <FormLabel className="text-lg font-semibold">
+                          Profile picture
+                        </FormLabel>
+                        <p className="text-sm text-gray-500">
+                          PNG, JPEG under 15MB
+                        </p>
                       </div>
                       <FormControl>
                         <div className="flex space-x-2">
                           <Button asChild type="button" variant="outline">
-                            <label htmlFor="profilePicture" className="cursor-pointer">
+                            <label
+                              htmlFor="profilePicture"
+                              className="cursor-pointer"
+                            >
                               <Input
                                 id="profilePicture"
                                 type="file"
@@ -187,7 +203,11 @@ const Profile = () => {
                               Upload Profile
                             </label>
                           </Button>
-                          <Button type="button" variant="destructive" className="hover:bg-red-700">
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            className="hover:bg-red-700"
+                          >
                             Delete
                           </Button>
                         </div>
@@ -207,7 +227,9 @@ const Profile = () => {
                       <FormControl>
                         <Input placeholder="eg. Will" {...field} />
                       </FormControl>
-                      <FormDescription>This is your public display name.</FormDescription>
+                      <FormDescription>
+                        This is your public display name.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -221,7 +243,9 @@ const Profile = () => {
                       <FormControl>
                         <Input placeholder="eg. Smith" {...field} />
                       </FormControl>
-                      <FormDescription>This is your public display name.</FormDescription>
+                      <FormDescription>
+                        This is your public display name.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -235,7 +259,10 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Tell us a bit about yourself" {...field} />
+                      <Textarea
+                        placeholder="Tell us a bit about yourself"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -245,14 +272,18 @@ const Profile = () => {
                 )}
               />
 
-              <FormField 
+              <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="example@gmail.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="example@gmail.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       This is the email address associated with your account.
@@ -270,9 +301,15 @@ const Profile = () => {
                     <FormItem>
                       <FormLabel>Current Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="********" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormDescription>Input your current password.</FormDescription>
+                      <FormDescription>
+                        Input your current password.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -285,21 +322,28 @@ const Profile = () => {
                     <FormItem>
                       <FormLabel>New Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="********" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormDescription>Input your new password.</FormDescription>
+                      <FormDescription>
+                        Input your new password.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <Separator className="mt-5" />
-
-              <CardFooter className="flex justify-end p-6 space-x-3">
+              <div className="flex justify-end p-6 space-x-3">
                 <Button type="submit" className="w-full md:w-auto">
                   Update Account
                 </Button>
-                <AlertDialog open={showDeleteAccountDialog} onOpenChange={setShowDeleteAccountDialog}>
+                <AlertDialog
+                  open={showDeleteAccountDialog}
+                  onOpenChange={setShowDeleteAccountDialog}
+                >
                   <AlertDialogTrigger asChild>
                     <Button
                       variant="destructive"
@@ -312,10 +356,13 @@ const Profile = () => {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -326,11 +373,11 @@ const Profile = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </CardFooter>
+              </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </PageLayout>
   );
 };

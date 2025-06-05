@@ -3,10 +3,10 @@ import { Title, NavItems } from "./NavItems";
 import { Link, useLocation } from "react-router-dom";
 import { GrCubes } from "react-icons/gr";
 import { LuLayoutDashboard, LuShoppingCart } from "react-icons/lu";
-import { RiMoneyDollarCircleLine } from "react-icons/ri"; 
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GoGear, GoChevronRight } from "react-icons/go";
 import { PiUserFocus } from "react-icons/pi";
-import { MdOutlineColorLens } from "react-icons/md";
+import { PiWrench } from "react-icons/pi";
 import {
   Tooltip,
   TooltipContent,
@@ -14,11 +14,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Separator } from "./ui/separator";
-import {useState} from "react";
+import { useState } from "react";
 import {
   Collapsible,
   CollapsibleTrigger,
-  CollapsibleContent
+  CollapsibleContent,
 } from "@/components/ui/collapsible";
 import React from "react";
 
@@ -27,7 +27,6 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
   const [isToggleOpen, setIsToggleOpen] = useState({
     settings: false,
   });
-
 
   const isActive = (path) => {
     if (path === "/") {
@@ -72,41 +71,44 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
     return navItem;
   };
 
-    const renderToggleItem = (title, icon, isToggleOpen, onOpenChange, children) => {
-      return (
-        <Collapsible open={isToggleOpen} onOpenChange={onOpenChange}>
-          <CollapsibleTrigger asChild>
+  const renderToggleItem = (
+    title,
+    icon,
+    isToggleOpen,
+    onOpenChange,
+    children
+  ) => {
+    return (
+      <Collapsible open={isToggleOpen} onOpenChange={onOpenChange}>
+        <CollapsibleTrigger asChild>
           <div className="items-center ju">
-              <NavItems
-                title={title}
-                icon={React.cloneElement(icon, { 
-                  className: `transition-transform duration-200 ${
-                    isToggleOpen ? 'rotate-90' : 'rotate-0'
-                  }`,
-                 })}
-                showTitle={!collapsed}
-                active={false}
+            <NavItems
+              title={title}
+              icon={React.cloneElement(icon, {
+                className: `transition-transform duration-200 ${
+                  isToggleOpen ? "rotate-90" : "rotate-0"
+                }`,
+              })}
+              showTitle={!collapsed}
+              active={false}
+            />
+
+            {!collapsed && (
+              <GoChevronRight
+                className={`transition-transform duration-200 ${
+                  isToggleOpen ? "rotate-90" : "rotate-0"
+                }`}
               />
+            )}
+          </div>
+        </CollapsibleTrigger>
 
-              {!collapsed &&(
-                <GoChevronRight
-                  className={`transition-transform duration-200 ${
-                    isToggleOpen ? 'rotate-90' : 'rotate-0'
-                  }`}
-                />
-              )}
-           </div>
-          </CollapsibleTrigger>
-
-          <CollapsibleContent>
-              <div className="ml-4">
-                {children}
-              </div>
-          </CollapsibleContent>
+        <CollapsibleContent>
+          <div className="ml-4">{children}</div>
+        </CollapsibleContent>
       </Collapsible>
-      );
-  }
-
+    );
+  };
 
   return (
     <div
@@ -164,40 +166,38 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
           {!collapsed && <Title title="Others" />}
 
           {renderToggleItem(
-            "Settings", 
-            <GoGear size={iconSize} />, 
-            isToggleOpen.settings, 
+            "Settings",
+            <GoGear size={iconSize} />,
+            isToggleOpen.settings,
             (open) => {
               setIsToggleOpen((prev) => ({
                 ...prev,
-                settings:open,
+                settings: open,
               }));
             },
             <>
               {renderNavItem(
                 "/profile",
                 "Profile",
-                <PiUserFocus  size={iconSize} />,
+                <PiUserFocus size={iconSize} />,
                 isActive("/profile")
               )}
               {renderNavItem(
-                "/appearance",
-                "Appearance",
-                <MdOutlineColorLens size={iconSize} />,
-                isActive("/appearance")
+                "/account",
+                "Account",
+                <PiWrench size={iconSize} />,
+                isActive("/account")
               )}
             </>
           )}
 
-
-{/*  
+          {/*  
           {renderNavItem(
             "/help",
             "Help Center",
             faQuestionCircle,
             isActive("/help")
           )} */}
-         
         </div>
       </div>
     </div>
