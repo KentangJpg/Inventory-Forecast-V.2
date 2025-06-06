@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import PageLayout from "../layouts/PageLayout";
+import { format } from "date-fns";
 import { useOutletContext } from "react-router-dom";
 import {
   Form,
@@ -16,10 +17,19 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { FaCalendar } from "react-icons/fa";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Your name is required"),
-  dateOfBirth: z.string().min(1, "Last name is required"),
+  dateOfBirth: z.date({
+    required_error: "Date of Birth is required",
+  }),
 });
 
 const Account = () => {
@@ -29,20 +39,13 @@ const Account = () => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: "",
-      dateOfBirth: "",
+      dateOfBirth: undefined,
     },
   });
 
   const onSubmit = (values) => {
     console.log("Form values:", values);
   };
-
-  const handleUpdateAccount = () => {
-    console.log("Account deletion confirmed!");
-    setShowDeleteAccountDialog(false);
-  };
-
-  const [preview, setPreview] = useState(null);
 
   return (
     <PageLayout
@@ -57,7 +60,7 @@ const Account = () => {
         </div>
       </div>
       <Separator className="my-6" />
-      <div className={"w-full mx-auto"}>
+      <div className={"w-full max-w-4xl mx-auto"}>
         <div className="flex flex-col">
           <span className="text-lg font-semibold mx-6">Account</span>
           <span className="text-gray-600 mx-6">
@@ -75,7 +78,11 @@ const Account = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="eg. Will" {...field} />
+                      <Input
+                        placeholder="eg. Will"
+                        {...field}
+                        className="max-w-sm"
+                      />
                     </FormControl>
                     <FormDescription>
                       This is the name that will be displayed on your profile
@@ -85,26 +92,49 @@ const Account = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="dateOfBirth"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date Of Birth</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Tell us a bit about yourself"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={`max-w-sm pl-3 text-left font-normal ${
+                              !field.value ? "text-muted-foreground" : ""
+                            }`}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Select date</span>
+                            )}
+                            <FaCalendar className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <FormDescription>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Your date of birth is used to calculate your age.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <Button type="submit" className="w-full md:w-auto">
+                Update Account
+              </Button>
             </form>
           </Form>
         </div>

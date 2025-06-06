@@ -139,7 +139,7 @@ const Profile = () => {
         </div>
       </div>
       <Separator className="my-6" />
-      <div className={"w-full mx-auto"}>
+      <div className={"w-full max-w-4xl mx-auto"}>
         <div className="flex flex-col">
           <span className="text-lg font-semibold mx-6">Profile Settings</span>
           <span className="text-gray-600 mx-6">
