@@ -45,7 +45,7 @@ import { Badge } from "@/components/ui/badge";
 import DataTable from "@/components/table/DataTable";
 import { PoColumns } from "@/components/table/PoColumns";
 import { PoData } from "@/components/table/PoData";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 const productSchema = z.object({
   name: z.string().min(1, { message: "Product name is required" }),

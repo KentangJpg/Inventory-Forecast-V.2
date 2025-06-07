@@ -5,6 +5,8 @@ import { GrCubes } from "react-icons/gr";
 import { LuLayoutDashboard, LuShoppingCart } from "react-icons/lu";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GoGear, GoChevronRight } from "react-icons/go";
+import { IoStorefrontOutline } from "react-icons/io5";
+import { GrGroup } from "react-icons/gr";
 import { PiUserFocus } from "react-icons/pi";
 import { PiWrench } from "react-icons/pi";
 import {
@@ -191,13 +193,19 @@ const Sidebar = ({ isCollapsed, isMobile, onCloseMobile }) => {
             </>
           )}
 
-          {/*  
           {renderNavItem(
-            "/help",
-            "Help Center",
-            faQuestionCircle,
-            isActive("/help")
-          )} */}
+            "/vendor",
+            "Vendor",
+            <IoStorefrontOutline size={iconSize} />,
+            isActive("/vendor")
+          )}
+
+          {renderNavItem(
+            "/customer",
+            "Customer",
+            <GrGroup size={iconSize} />,
+            isActive("/customer")
+          )}
         </div>
       </div>
     </div>

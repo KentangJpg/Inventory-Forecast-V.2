@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import Account from "./pages/Account";
+import Vendor from "./pages/Vendor";
+import Customer from "./pages/Customer";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="sales" element={<SalesOrder />} />
         <Route path="profile" element={<Profile />} />
         <Route path="account" element={<Account />} />
+        <Route path="vendor" element={<Vendor />} />
+        <Route path="customer" element={<Customer />} />
       </Route>
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
