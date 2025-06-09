@@ -23,23 +23,30 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Input } from "@/components/ui/input";
 
 const Customer = () => {
   const { toggleSidebar, isMobile } = useOutletContext();
   const [open, setOpen] = useState(false);
 
   const formSchema = z.object({
-    company: z.string().min(1, { message: "Company name is required" }),
     name: z.string().min(1, { message: "Name is required" }),
+    type: z.string().min(1, { message: "Customer Type is required" }),
+    status: z.string().min(1, { message: "Select status" }),
   });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        company: "",
-        name: ""
+      name: "",
+      type: "",
+      status:"",
     },
   });
+
+  const onSubmit = (data) => {
+    console.log("Submitted");
+  };
 
   return (
     <PageLayout
@@ -64,15 +71,51 @@ const Customer = () => {
               <SheetHeader>
                 <SheetTitle>Add New Customer</SheetTitle>
                 <SheetDescription>
-                  Fill in the details to create a new customer.
+                  Fill in the details to create a new Customer.
                 </SheetDescription>
               </SheetHeader>
 
               <div className="px-4">
-                <Form>
-                  <form className="space-y-4 py-6"></form>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 py-6"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Customer Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g Benson Boone"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField control={form.control} />
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g Hendrick Brad" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <SheetFooter>
+                      <Button type="submit"> Add New Customer </Button>
+                    </SheetFooter>
+                  </form>
                 </Form>
               </div>
             </SheetContent>

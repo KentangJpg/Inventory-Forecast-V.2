@@ -23,8 +23,9 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Input } from "@/components/ui/input";
 
-const Vendor = () => {
+const Customer = () => {
   const { toggleSidebar, isMobile } = useOutletContext();
   const [open, setOpen] = useState(false);
 
@@ -41,9 +42,13 @@ const Vendor = () => {
     },
   });
 
+  const onSubmit = (data) => {
+    console.log("Submitted");
+  };
+
   return (
     <PageLayout
-      title="Vendor"
+      title="Customer"
       toggleSidebar={toggleSidebar}
       isMobile={isMobile}
     >
@@ -64,15 +69,51 @@ const Vendor = () => {
               <SheetHeader>
                 <SheetTitle>Add New Vendor</SheetTitle>
                 <SheetDescription>
-                  Fill in the details to create a new vendor.
+                  Fill in the details to create a new Vendor.
                 </SheetDescription>
               </SheetHeader>
 
               <div className="px-4">
-                <Form>
-                  <form className="space-y-4 py-6"></form>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 py-6"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="company"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Company Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g Supplier Co., Ltd."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField control={form.control} />
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g Hendrick Brad" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <SheetFooter>
+                      <Button type="submit"> Add New Vendor </Button>
+                    </SheetFooter>
+                  </form>
                 </Form>
               </div>
             </SheetContent>
@@ -83,4 +124,4 @@ const Vendor = () => {
   );
 };
 
-export default Vendor;
+export default Customer;
